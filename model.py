@@ -58,7 +58,22 @@ def _preprocess_data(data):
     # ---------------------------------------------------------------
 
     # ----------- Replace this code with your own preprocessing steps --------
-    predict_vector = feature_vector_df[['Madrid_wind_speed','Bilbao_rain_1h','Valencia_wind_speed']]
+    X_train = feature_vector_df[['Madrid_wind_speed', 'Valencia_wind_deg', 'Bilbao_rain_1h', 'Valencia_wind_speed', 'Seville_humidity', 'Madrid_humidity',
+    'Bilbao_clouds_all', 'Bilbao_wind_speed', 'Seville_clouds_all', 'Bilbao_wind_deg', 'Barcelona_wind_speed', 'Barcelona_wind_deg', 'Madrid_clouds_all', 'Seville_wind_speed',
+    'Barcelona_rain_1h', 'Seville_pressure', 'Seville_rain_1h', 'Bilbao_snow_3h', 'Barcelona_pressure', 'Seville_rain_3h', 'Madrid_rain_1h', 'Barcelona_rain_3h',
+    'Valencia_snow_3h', 'Madrid_weather_id', 'Barcelona_weather_id', 'Bilbao_pressure', 'Seville_weather_id', 'Seville_temp_max', 'Bilbao_weather_id',
+    'Valencia_humidity', 'time']]
+    X_train["time"] = pd.to_datetime(X_train["time"])
+    X_train["Year"] = X_train["time"].dt.year.astype(int)
+    X_train["Month_of_year"] = X_train["time"].dt.month.astype(int)
+    X_train['Week_of_year'] = X_train['time'].dt.isocalendar().week.astype(int)
+    X_train['Day_of_year'] = X_train['time'].dt.dayofyear.astype(int)
+    X_train["Day_of_month"] = X_train["time"].dt.day.astype(int)
+    X_train['Day_of_week'] = X_train['time'].dt.dayofweek.astype(int)
+    X_train["Hour_of_day"] = X_train["time"].dt.hour.astype(int)
+    X_train["Valencia_wind_deg"] = X_train["Valencia_wind_deg"].str.extract("(\d+)").astype(int)
+    X_train["Seville_pressure"] = X_train["Seville_pressure"].str.extract("(\d+)").astype(int)
+    predict_vector = X_train.drop(labels=["time"], axis=1)
     # ------------------------------------------------------------------------
 
     return predict_vector
